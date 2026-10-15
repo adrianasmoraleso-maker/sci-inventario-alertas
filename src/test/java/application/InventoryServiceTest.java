@@ -613,4 +613,57 @@ class InventoryServiceTest {
         ));
     }
 
+    @Test
+    void shouldSkipLotWithZeroBalanceDuringFEFOExit() {
+        Product product = new Product("P001", "Producto de prueba", 0, 180);
+
+        Lot emptyLot = new Lot("L001", today.plusDays(5), 5);
+        emptyLot.setBalance(0);
+
+        Lot availableLot = new Lot("L002", today.plusDays(10), 5);
+
+        product.addLot(emptyLot, today);
+        product.addLot(availableLot, today);
+        repository.save(product);
+
+        service.registerExit("P001", 3);
+
+        assertEquals(0, emptyLot.getBalance());
+        assertEquals(2, availableLot.getBalance());
+    }
+
+    @Test
+    void shouldPrioritizeClosestExpirationEvenIfLotWasRegisteredLater() {
+        Product product = new Product("P001", "Producto de prueba", 0, 180);
+
+        Lot laterExpiration = new Lot("L001", today.plusDays(20), 5);
+        Lot earlierExpiration = new Lot("L002", today.plusDays(10), 5);
+
+        product.addLot(laterExpiration, today);
+        product.addLot(earlierExpiration, today);
+        repository.save(product);
+
+        service.registerExit("P001", 3);
+
+        assertEquals(5, laterExpiration.getBalance());
+        assertEquals(2, earlierExpiration.getBalance());
+    }
+
+    @Test
+    void shouldRespectRegistrationOrderWhenLotsHaveSameExpirationDate() {
+        Product product = new Product("P001", "Producto de prueba", 0, 180);
+
+        Lot firstLot = new Lot("L001", today.plusDays(10), 5);
+        Lot secondLot = new Lot("L002", today.plusDays(10), 5);
+
+        product.addLot(firstLot, today);
+        product.addLot(secondLot, today);
+        repository.save(product);
+
+        service.registerExit("P001", 3);
+
+        assertEquals(2, firstLot.getBalance());
+        assertEquals(5, secondLot.getBalance());
+    }
+
 }
