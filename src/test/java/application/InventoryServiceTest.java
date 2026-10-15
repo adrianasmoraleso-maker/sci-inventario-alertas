@@ -694,4 +694,55 @@ class InventoryServiceTest {
         );
     }
 
+
+    @Test
+    void shouldRejectDuplicateLotCodeWithinSameProduct() {
+        service.createProduct("P001", "Arroz", 5, 180);
+        service.registerLot("P001", "L001", today.plusDays(10), 10);
+
+        assertThrows(IllegalArgumentException.class, () ->
+                service.registerLot("P001", "L001", today.plusDays(20), 5)
+        );
+    }
+
+    @Test
+    void shouldRejectZeroInitialLotQuantity() {
+        service.createProduct("P001", "Arroz", 5, 180);
+
+        assertThrows(IllegalArgumentException.class, () ->
+                service.registerLot("P001", "L001", today.plusDays(10), 0)
+        );
+    }
+
+    @Test
+    void shouldRejectNegativeInitialLotQuantity() {
+        service.createProduct("P001", "Arroz", 5, 180);
+
+        assertThrows(IllegalArgumentException.class, () ->
+                service.registerLot("P001", "L001", today.plusDays(10), -1)
+        );
+    }
+
+
+    @Test
+    void shouldNotConsumeExpiredLotsDuringExit() {
+        Product product = new Product("P001", "Arroz", 0, 180);
+
+        Lot expiredLot = new Lot("L001", today.plusDays(1), 5);
+        Lot validLot = new Lot("L002", today.plusDays(10), 5);
+
+        product.addLot(expiredLot, today);
+        product.addLot(validLot, today);
+        repository.save(product);
+
+        // Avanzamos el reloj: L001 queda caducado y L002 sigue vigente.
+        clock.setToday(today.plusDays(2));
+
+        service.registerExit("P001", 3);
+
+        assertEquals(5, expiredLot.getBalance());
+        assertEquals(2, validLot.getBalance());
+    }
+
+
 }
