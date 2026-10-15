@@ -151,7 +151,97 @@ class InventoryServiceTest {
                 repository.findById("P001")
                         .getLots().get(0).getBalance()
         );
+
     }
+
+
+    @Test
+    void shouldRegisterExitUsingFEFO() {
+        Product product = new Product("P001", "Producto de prueba", 5, 180);
+
+        // El lote L001 vence después, pero se registra primero.
+        product.addLot(
+                new Lot("L001", today.plusDays(10), 5),
+                today
+        );
+
+        // El lote L002 vence antes, por lo que debe consumirse primero.
+        product.addLot(
+                new Lot("L002", today.plusDays(3), 4),
+                today
+        );
+
+        repository.save(product);
+
+        service.registerExit("P001", 6);
+
+        Product updatedProduct = repository.findById("P001");
+
+        Lot lot1 = updatedProduct.getLots().stream()
+                .filter(lot -> lot.getCode().equals("L001"))
+                .findFirst()
+                .orElseThrow();
+
+        Lot lot2 = updatedProduct.getLots().stream()
+                .filter(lot -> lot.getCode().equals("L002"))
+                .findFirst()
+                .orElseThrow();
+
+        assertEquals(3, lot1.getBalance());
+        assertEquals(0, lot2.getBalance());
+        assertEquals(3, updatedProduct.getAvailableStock(today));
+    }
+
+    @Test
+    void shouldRejectExitWhenAvailableStockIsInsufficient() {
+        Product product = createProductWithLot(
+                "P001", "L001", today.plusDays(10), 5
+        );
+
+        assertThrows(
+                IllegalStateException.class,
+                () -> service.registerExit("P001", 6)
+        );
+
+        assertEquals(5, product.getLots().get(0).getBalance());
+    }
+
+    @Test
+    void shouldRejectExitWhenProductDoesNotExist() {
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> service.registerExit("P999", 5)
+        );
+    }
+
+    @Test
+    void shouldRejectExitWithZeroQuantity() {
+        Product product = createProductWithLot(
+                "P001", "L001", today.plusDays(10), 5
+        );
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> service.registerExit("P001", 0)
+        );
+
+        assertEquals(5, product.getLots().get(0).getBalance());
+    }
+
+    @Test
+    void shouldRejectExitWithNegativeQuantity() {
+        Product product = createProductWithLot(
+                "P001", "L001", today.plusDays(10), 5
+        );
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> service.registerExit("P001", -2)
+        );
+
+        assertEquals(5, product.getLots().get(0).getBalance());
+    }
+
 
     // Repositorio en memoria: no crea ni modifica archivos reales.
     private static class InMemoryProductRepository
