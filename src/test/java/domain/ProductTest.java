@@ -131,4 +131,36 @@ class ProductTest {
         assertEquals(5, secondRegistered.getBalance());
     }
 
+
+    @Test
+    void shouldCountExpiredStockSeparately() {
+        LocalDate today = LocalDate.of(2026, 10, 14);
+        Product product = new Product("P001", "Arroz", 5, 180);
+
+        Lot expiredLot = new Lot("L001", today, 4);
+        product.addLot(expiredLot, today);
+
+        Lot availableLot = new Lot("L002", today.plusDays(5), 7);
+        product.addLot(availableLot, today);
+
+        LocalDate nextDay = today.plusDays(1);
+
+        assertEquals(7, product.getAvailableStock(nextDay));
+        assertEquals(4, product.getExpiredStock(nextDay));
+    }
+
+
+    @Test
+    void shouldIncludeLotOnItsExpirationDateInAvailableStock() {
+        LocalDate today = LocalDate.of(2026, 10, 14);
+        Product product = new Product("P001", "Arroz", 5, 180);
+
+        product.addLot(new Lot("L001", today, 6), today);
+
+        assertEquals(6, product.getAvailableStock(today));
+        assertEquals(0, product.getExpiredStock(today));
+    }
+
+
+
 }
