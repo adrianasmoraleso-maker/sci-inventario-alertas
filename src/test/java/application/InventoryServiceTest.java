@@ -243,6 +243,105 @@ class InventoryServiceTest {
     }
 
 
+    @Test
+    void shouldCreateProductSuccessfully() {
+        service.createProduct("P001", "Arroz", 10, 180);
+
+        Product product = repository.findById("P001");
+
+        assertNotNull(product);
+        assertEquals("P001", product.getCode());
+        assertEquals("Arroz", product.getName());
+        assertEquals(10, product.getMinStock());
+        assertEquals(180, product.getAlertThresholdDays());
+    }
+
+    @Test
+    void shouldRejectDuplicateProductCode() {
+        service.createProduct("P001", "Arroz", 10, 180);
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> service.createProduct("P001", "Arroz integral", 5, 90)
+        );
+
+        assertEquals(1, service.listProducts().size());
+        assertEquals("Arroz", repository.findById("P001").getName());
+    }
+
+    @Test
+    void shouldListAllProducts() {
+        service.createProduct("P001", "Arroz", 10, 180);
+        service.createProduct("P002", "Lentejas", 5, 90);
+
+        List<Product> products = service.listProducts();
+
+        assertEquals(2, products.size());
+        assertTrue(products.stream().anyMatch(
+                product -> product.getCode().equals("P001")
+        ));
+        assertTrue(products.stream().anyMatch(
+                product -> product.getCode().equals("P002")
+        ));
+    }
+
+    @Test
+    void shouldEditProductSuccessfully() {
+        service.createProduct("P001", "Arroz", 10, 180);
+
+        service.editProduct("P001", "Arroz integral", 15, 90);
+
+        Product product = repository.findById("P001");
+
+        assertEquals("Arroz integral", product.getName());
+        assertEquals(15, product.getMinStock());
+        assertEquals(90, product.getAlertThresholdDays());
+    }
+
+    @Test
+    void shouldRejectEditingNonexistentProduct() {
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> service.editProduct("P999", "Arroz", 10, 180)
+        );
+    }
+
+    @Test
+    void shouldDeleteProductWithoutPositiveStock() {
+        Product product = createProductWithLot(
+                "P001", "L001", today.plusDays(10), 5
+        );
+
+        // Un lote con saldo cero no impide eliminar el producto.
+        product.getLots().get(0).setBalance(0);
+
+        service.deleteProduct("P001");
+
+        assertNull(repository.findById("P001"));
+        assertTrue(service.listProducts().isEmpty());
+    }
+
+    @Test
+    void shouldRejectDeletingProductWithPositiveStock() {
+        createProductWithLot(
+                "P001", "L001", today.plusDays(10), 5
+        );
+
+        assertThrows(
+                IllegalStateException.class,
+                () -> service.deleteProduct("P001")
+        );
+
+        assertNotNull(repository.findById("P001"));
+        assertEquals(
+                5,
+                repository.findById("P001").getLots().get(0).getBalance()
+        );
+    }
+
+
+
+
     // Repositorio en memoria: no crea ni modifica archivos reales.
     private static class InMemoryProductRepository
             implements ProductRepository {
