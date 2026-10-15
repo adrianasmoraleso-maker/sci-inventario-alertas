@@ -569,4 +569,48 @@ class InventoryServiceTest {
         ));
     }
 
+
+    @Test
+    void shouldGenerateNearExpiryAlertWhenLotEntersConfiguredThreshold() {
+        createProductWithLot(
+                "P001", "L001", today.plusDays(180), 10
+        );
+
+        List<Alert> alerts = service.getAlerts();
+
+        assertTrue(alerts.stream().anyMatch(alert ->
+                "PROXIMO_A_CADUCAR".equals(alert.getType())
+        ));
+    }
+
+    @Test
+    void shouldGenerateNearExpiryAlertExactlyAtThresholdBoundary() {
+        createProductWithLot(
+                "P001", "L001", today.plusDays(180), 10
+        );
+
+        clock.setToday(today.plusDays(1));
+
+        List<Alert> alerts = service.getAlerts();
+
+        assertTrue(alerts.stream().anyMatch(alert ->
+                "PROXIMO_A_CADUCAR".equals(alert.getType())
+        ));
+    }
+
+    @Test
+    void shouldGenerateExpiredAlertWhenTodayIsAfterDueDate() {
+        createProductWithLot(
+                "P001", "L001", today, 10
+        );
+
+        clock.setToday(today.plusDays(1));
+
+        List<Alert> alerts = service.getAlerts();
+
+        assertTrue(alerts.stream().anyMatch(alert ->
+                "CADUCADO".equals(alert.getType())
+        ));
+    }
+
 }
