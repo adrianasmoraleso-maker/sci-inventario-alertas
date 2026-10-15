@@ -162,5 +162,35 @@ class ProductTest {
     }
 
 
+    @Test
+    void shouldRejectBlankProductName() {
+        LocalDate today = LocalDate.of(2026, 10, 14);
+
+        assertThrows(IllegalArgumentException.class, () ->
+                new Product("P001", "   ", 5, 180)
+        );
+    }
+
+    @Test
+    void shouldRejectNegativeMinimumStock() {
+        assertThrows(IllegalArgumentException.class, () ->
+                new Product("P001", "Arroz", -1, 180)
+        );
+    }
+
+    @Test
+    void shouldRejectZeroAlertThreshold() {
+        assertThrows(IllegalArgumentException.class, () ->
+                new Product("P001", "Arroz", 5, 0)
+        );
+    }
+
+    @Test
+    void shouldRejectNegativeAlertThreshold() {
+        assertThrows(IllegalArgumentException.class, () ->
+                new Product("P001", "Arroz", 5, -1)
+        );
+    }
+
 
 }
