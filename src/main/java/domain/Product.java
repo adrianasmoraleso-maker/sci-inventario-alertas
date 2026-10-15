@@ -58,8 +58,16 @@ public class Product {
     }
 
     public void processExit(int quantity, LocalDate today) {
+        if (quantity <= 0) {
+            throw new IllegalArgumentException(
+                    "La cantidad debe ser mayor a cero"
+            );
+        }
+
         if (getAvailableStock(today) < quantity) {
-            throw new IllegalStateException("Stock insuficiente para realizar la salida");
+            throw new IllegalStateException(
+                    "Stock insuficiente para realizar la salida"
+            );
         }
 
         List<Lot> validLots = new ArrayList<>();
