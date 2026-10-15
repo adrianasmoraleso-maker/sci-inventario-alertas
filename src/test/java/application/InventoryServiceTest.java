@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.List;
+import domain.Alert;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -532,4 +534,39 @@ class InventoryServiceTest {
             this.today = today;
         }
     }
+
+
+    @Test
+    void shouldGenerateLowStockAlertWhenAvailableStockIsBelowMinimum() {
+        createProductWithLot("P001", "L001", today.plusDays(30), 4);
+
+        List<Alert> alerts = service.getAlerts();
+
+        assertTrue(alerts.stream().anyMatch(alert ->
+                "STOCK_BAJO".equals(alert.getType())
+        ));
+    }
+
+    @Test
+    void shouldNotGenerateLowStockAlertWhenStockEqualsMinimum() {
+        createProductWithLot("P001", "L001", today.plusDays(30), 5);
+
+        List<Alert> alerts = service.getAlerts();
+
+        assertFalse(alerts.stream().anyMatch(alert ->
+                "STOCK_BAJO".equals(alert.getType())
+        ));
+    }
+
+    @Test
+    void shouldNotGenerateLowStockAlertWhenMinimumStockIsZero() {
+        service.createProduct("P001", "Arroz", 0, 180);
+
+        List<Alert> alerts = service.getAlerts();
+
+        assertFalse(alerts.stream().anyMatch(alert ->
+                "STOCK_BAJO".equals(alert.getType())
+        ));
+    }
+
 }
