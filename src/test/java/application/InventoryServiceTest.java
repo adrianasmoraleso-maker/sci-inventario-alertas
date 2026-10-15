@@ -340,6 +340,144 @@ class InventoryServiceTest {
     }
 
 
+    @Test
+    void shouldRegisterLotSuccessfully() {
+        service.createProduct("P001", "Arroz", 10, 180);
+
+        service.registerLot(
+                "P001", "L001", today.plusDays(30), 20
+        );
+
+        Product product = repository.findById("P001");
+
+        assertEquals(1, product.getLots().size());
+        assertEquals("L001", product.getLots().get(0).getCode());
+        assertEquals(today.plusDays(30), product.getLots().get(0).getDueDate());
+        assertEquals(20, product.getLots().get(0).getBalance());
+    }
+
+    @Test
+    void shouldRejectLotWithZeroInitialQuantity() {
+        service.createProduct("P001", "Arroz", 10, 180);
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> service.registerLot(
+                        "P001", "L001", today.plusDays(30), 0
+                )
+        );
+
+        assertTrue(repository.findById("P001").getLots().isEmpty());
+    }
+
+    @Test
+    void shouldRejectLotWithNegativeInitialQuantity() {
+        service.createProduct("P001", "Arroz", 10, 180);
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> service.registerLot(
+                        "P001", "L001", today.plusDays(30), -5
+                )
+        );
+
+        assertTrue(repository.findById("P001").getLots().isEmpty());
+    }
+
+    @Test
+    void shouldRejectLotWithPastExpirationDate() {
+        service.createProduct("P001", "Arroz", 10, 180);
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> service.registerLot(
+                        "P001", "L001", today.minusDays(1), 20
+                )
+        );
+
+        assertTrue(repository.findById("P001").getLots().isEmpty());
+    }
+
+    @Test
+    void shouldRejectDuplicateLotCodeWithinProduct() {
+        service.createProduct("P001", "Arroz", 10, 180);
+
+        service.registerLot(
+                "P001", "L001", today.plusDays(30), 20
+        );
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> service.registerLot(
+                        "P001", "L001", today.plusDays(60), 15
+                )
+        );
+
+        Product product = repository.findById("P001");
+
+        assertEquals(1, product.getLots().size());
+        assertEquals(20, product.getLots().get(0).getBalance());
+    }
+
+    @Test
+    void shouldRejectLotWhenProductDoesNotExist() {
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> service.registerLot(
+                        "P999", "L001", today.plusDays(30), 20
+                )
+        );
+    }
+
+
+
+    @Test
+    void shouldDeleteExpiredLotSuccessfully() {
+        Product product = createProductWithLot(
+                "P001", "L001", today, 10
+        );
+
+        clock.setToday(today.plusDays(1));
+
+        service.deleteExpiredLot("P001", "L001");
+
+        assertTrue(product.getLots().isEmpty());
+    }
+
+
+    @Test
+    void shouldRejectDeletingLotThatIsNotExpired() {
+        Product product = createProductWithLot(
+                "P001", "L001", today.plusDays(10), 10
+        );
+
+        assertThrows(
+                IllegalStateException.class,
+                () -> service.deleteExpiredLot("P001", "L001")
+        );
+
+        assertEquals(1, product.getLots().size());
+        assertEquals(10, product.getLots().get(0).getBalance());
+    }
+
+    @Test
+    void shouldRejectDeletingNonexistentLot() {
+        service.createProduct("P001", "Arroz", 10, 180);
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> service.deleteExpiredLot("P001", "L999")
+        );
+    }
+
+    @Test
+    void shouldRejectDeletingLotWhenProductDoesNotExist() {
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> service.deleteExpiredLot("P999", "L001")
+        );
+    }
+
 
 
     // Repositorio en memoria: no crea ni modifica archivos reales.
