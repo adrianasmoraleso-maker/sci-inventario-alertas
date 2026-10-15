@@ -192,5 +192,50 @@ class ProductTest {
         );
     }
 
+    @Test
+    void shouldRejectNegativeMinimumStockWhenUpdating() {
+        Product product = new Product("P001", "Arroz", 5, 180);
+
+        assertThrows(IllegalArgumentException.class, () ->
+                product.setMinStock(-1)
+        );
+    }
+
+    @Test
+    void shouldRejectZeroAlertThresholdWhenUpdating() {
+        Product product = new Product("P001", "Arroz", 5, 180);
+
+        assertThrows(IllegalArgumentException.class, () ->
+                product.setAlertThresholdDays(0)
+        );
+    }
+
+    @Test
+    void shouldRejectNegativeAlertThresholdWhenUpdating() {
+        Product product = new Product("P001", "Arroz", 5, 180);
+
+        assertThrows(IllegalArgumentException.class, () ->
+                product.setAlertThresholdDays(-1)
+        );
+    }
+
+    @Test
+    void shouldAllowZeroMinimumStockWhenUpdating() {
+        Product product = new Product("P001", "Arroz", 5, 180);
+
+        product.setMinStock(0);
+
+        assertEquals(0, product.getMinStock());
+    }
+
+    @Test
+    void shouldAllowPositiveAlertThresholdWhenUpdating() {
+        Product product = new Product("P001", "Arroz", 5, 180);
+
+        product.setAlertThresholdDays(1);
+
+        assertEquals(1, product.getAlertThresholdDays());
+    }
+
 
 }
