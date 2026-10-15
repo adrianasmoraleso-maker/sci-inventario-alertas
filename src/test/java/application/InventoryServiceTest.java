@@ -666,4 +666,32 @@ class InventoryServiceTest {
         assertEquals(5, secondLot.getBalance());
     }
 
+
+    @Test
+    void shouldRejectNegativeMinimumStockWhenEditingProduct() {
+        service.createProduct("P001", "Arroz", 5, 180);
+
+        assertThrows(IllegalArgumentException.class, () ->
+                service.editProduct("P001", "Arroz", -1, 180)
+        );
+    }
+
+    @Test
+    void shouldRejectZeroAlertThresholdWhenEditingProduct() {
+        service.createProduct("P001", "Arroz", 5, 180);
+
+        assertThrows(IllegalArgumentException.class, () ->
+                service.editProduct("P001", "Arroz", 5, 0)
+        );
+    }
+
+    @Test
+    void shouldRejectNegativeAlertThresholdWhenEditingProduct() {
+        service.createProduct("P001", "Arroz", 5, 180);
+
+        assertThrows(IllegalArgumentException.class, () ->
+                service.editProduct("P001", "Arroz", 5, -1)
+        );
+    }
+
 }
