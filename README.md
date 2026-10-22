@@ -19,3 +19,6 @@ mvn clean compile exec:java -Dexec.mainClass="Main"
 - `src/main/java/application/`: Casos de uso.
 - `src/main/java/adapters/in/`: Interfaz gráfica (Swing).
 - `src/main/java/adapters/out/`: Persistencia (JSON) y Reloj (Bogotá).
+
+## Pruebas
+Ejecute la suite con `mvn test`. Las pruebas de persistencia usan archivos temporales; las pruebas de arquitectura verifican las dependencias entre capas; y las pruebas de Swing requieren un entorno gráfico (se omiten en modo headless).

@@ -11,16 +11,22 @@ import domain.ProductRepository;
 
 import java.io.*;
 import java.lang.reflect.Type;
+import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class JsonProductRepository implements ProductRepository {
-    private final String filePath = "inventory.json";
+    private final Path filePath;
     private final Gson gson;
     private List<Product> cachedProducts;
 
     public JsonProductRepository() {
+        this(Path.of("inventory.json"));
+    }
+
+    public JsonProductRepository(Path filePath) {
+        this.filePath = filePath;
         this.gson = new GsonBuilder()
                 .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
                 .setPrettyPrinting()
@@ -29,7 +35,7 @@ public class JsonProductRepository implements ProductRepository {
     }
 
     private void loadFromFile() {
-        File file = new File(filePath);
+        File file = filePath.toFile();
         if (!file.exists()) {
             cachedProducts = new ArrayList<>();
             saveToFile();
@@ -46,7 +52,7 @@ public class JsonProductRepository implements ProductRepository {
     }
 
     private void saveToFile() {
-        try (Writer writer = new FileWriter(filePath)) {
+        try (Writer writer = new FileWriter(filePath.toFile())) {
             gson.toJson(cachedProducts, writer);
         } catch (IOException e) {
             System.err.println("No se pudo guardar en el archivo JSON. " + e.getMessage());
