@@ -7,5 +7,6 @@ target/
 .vscode/
 inventory.json
 
-out/
+/out/
 build/
+prototipos/*/out/
