@@ -6,3 +6,6 @@ target/
 *.iml
 .vscode/
 inventory.json
+
+out/
+build/
