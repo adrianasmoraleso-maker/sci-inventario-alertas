@@ -1,0 +1,11 @@
+target/
+*.class
+*.jar
+*.war
+.idea/
+*.iml
+.vscode/
+inventory.json
+inventory.json.bak*
+inventory.json.tmp
+!.mvn/wrapper/*.jar
