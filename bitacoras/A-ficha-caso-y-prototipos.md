@@ -20,7 +20,7 @@ Equipo CodeMind Lab · Metodología de la Investigación · Ingeniería de Softw
 | Especificación SDD | Versiones 0.3 y 0.4. Archivos `especificacion/Especificacion_SDD_SCI_v0.1.md` y `especificacion/Especificacion_SDD_SCI_v0.2.md`; sus contenidos declaran las versiones SDD 0.3 y 0.4, respectivamente. La carpeta está actualmente sin versionar en Git |
 | Herramientas y modelo exacto | Gemini: Gemini 3.1 Pro (14/10/2026, implementación) y Gemini 3.6 Flash (22/10/2026, imagen de GUI). Claude: Claude Sonnet 5.5, nivel medio (10/10/2026 y 22/10/2026). Planes: Gemini Pro, Claude gratuito |
 | Entorno de pruebas | IntelliJ IDEA 2026.2.3 (Build 262.10968.63), JUnit 5.10.2, Windows. Ejecución con Maven: Apache Maven 3.9.9 (obtenido mediante el Maven Wrapper de P2); Java 25.0.2, Eclipse Adoptium jdk-25.0.2.10-hotspot; Windows 10 amd64; codificación de plataforma UTF-8; configuración regional en_US. Proyecto com.sci:inventory-system. El equipo anotó 17:43 (UTC-5) como hora de ejecución del 27/10/2026; los logs archivados terminan a las 17:50 para P1 y 18:57 para P2. Nota: el informe del 22/10/2026 indica que ese día las suites se corrieron desde el IDE porque Maven no estaba disponible. La especificación requiere JDK 17 o superior |
-| Autor de las pruebas JUnit | Adriana Morales y Said Alejandro |
+| Autor de las pruebas JUnit | Adriana Morales y Said Martelo |
 | Fecha de inicio y fin del registro | Inicio: 10/10/2026. Fin: 27/10/2026 |
 | Criterios de comparación congelados | 27/10/2026, aprox. 18:00 según el registro del equipo. El log archivado de P2 termina a las 18:57; confirmar si 17:43 corresponde al inicio de esa ejecución antes de afirmar que los criterios se congelaron después de ejecutarla |
 
@@ -65,7 +65,7 @@ Equipo CodeMind Lab · Metodología de la Investigación · Ingeniería de Softw
 | N.º de interacciones hasta P2 | 1 (INT-P2-001), más 1 de actualización de requisitos (INT-P0-002). Se detuvo dos veces y se le indicó "continuar" |
 | ¿Compila y corre desde IntelliJ sin cambios del equipo? | Sí, sin cambios del equipo |
 | Cambios del equipo sobre lo entregado por la IA | Ninguno: el código solo fue modificado por la IA |
-| Pruebas | 9 archivos en `src/test/java`: los 7 de P1 más `testsupport/FixedClock.java` y `testsupport/InMemoryProductRepository.java`. Sí se adaptaron a P2: las adaptó Said Alejandro y Adriana sube todo al repositorio |
+| Pruebas | 9 archivos en `src/test/java`: los 7 de P1 más `testsupport/FixedClock.java` y `testsupport/InMemoryProductRepository.java`. Sí se adaptaron a P2: las adaptó Said Martelo y Adriana sube todo al repositorio |
 | Contenido de `docs/` | `.gitkeep` e `INFORME_ACTUALIZACION_V2.md`. En la raíz de P2 también están `mvnw`, `mvnw.cmd` y `pom.xml`. Quién lo generó: Claude (INT-P2-001); subido al repositorio por el equipo |
 | Estado resumido | El informe previo de actualización describe 76 pruebas aprobadas y 25 de interfaz omitidas en modo headless; corresponde a otra corrida. El informe Maven archivado de la ejecución del equipo registra 101 pruebas, 101 aprobadas, 0 fallidas, 0 errores y 0 omitidas (`evidencia/pruebas/P2/test-run.txt`, finalizada a las 18:57 del 27/10/2026). Inspección estática del informe de actualización: 43 clases de producción y 3.235 líneas |
 | Observaciones | Claude se detuvo dos veces durante la generación |

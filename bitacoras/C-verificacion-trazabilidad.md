@@ -24,7 +24,7 @@
 
 La evidencia disponible corresponde a las ejecuciones Maven archivadas, no a una ejecución registrada desde IntelliJ. Los reportes Surefire no identifican a las personas ejecutoras; los nombres consignados en la tabla fueron añadidos por el equipo para indicar quién estuvo a cargo de cada suite. Símbolos: `✔` aprobado · `✖` falló · `NE` no ejecutado/no verificable con la evidencia disponible. `SwingAppTest` se ejecutó en ambos prototipos (3 pruebas en P1 y 25 en P2), sin omitidas en esos reportes.
 
-Según el equipo, las verificaciones manuales de interfaz de P1 indicadas en la matriz sí se realizaron, pero no se conservaron capturas ni un registro detallado de pasos y resultados. Por ello, sus estados representan la valoración retrospectiva del equipo y no pueden corroborarse con evidencia archivada.
+Según el equipo, las verificaciones manuales de interfaz de P1 indicadas en la matriz sí se realizaron. Se conservaron capturas de algunas pantallas, pero no un registro detallado de los pasos y resultados de cada verificación. Por ello, sus estados representan la valoración retrospectiva del equipo; las capturas documentan aspectos visibles de la interfaz, pero no bastan para corroborar cada resultado.
 
 | Archivo de prueba | Ejecutó (fecha, quién) | P1: aprobadas / falladas / omitidas | P2: aprobadas / falladas / omitidas | Evidencia | Notas |
 |---|---|---|---|---|---|
