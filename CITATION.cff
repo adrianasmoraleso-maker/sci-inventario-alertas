@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: "Si usa este material, cítelo como se indica a continuación."
+title: "Evidencia del estudio de caso: desarrollo del SCI mediante Spec-Driven Development con apoyo de IA"
+type: dataset
+version: v1.0
+date-released: 2026-10-28
+authors:
+  - family-names: "Morales Obediente"
+    given-names: "Adriana Sue"
+    affiliation: "Universidad de Cartagena"
+  - family-names: "Junco Moreno"
+    given-names: "Luiggy Santiago"
+    affiliation: "Universidad de Cartagena"
+  - family-names: "Martelo Diaz"
+    given-names: "Said Alejandro"
+    affiliation: "Universidad de Cartagena"
+repository-code: "https://github.com/adrianasmoraleso-maker/sci-inventario-alertas"
+keywords:
+  - inteligencia artificial
+  - Spec-Driven Development
+  - estudio de caso
+  - ingeniería de software
