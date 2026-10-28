@@ -107,9 +107,8 @@ El equipo es a la vez ejecutor y analista del caso. Es un estudio de caso único
 
 ## Cómo citar
 
-No se incluye un DOI en este repositorio porque aún no se ha publicado un release formal en Zenodo para la versión `v1.0`.
 
-> Equipo CodeMind Lab. (2026). *Evidencia del estudio de caso: desarrollo del SCI mediante Spec-Driven Development con apoyo de IA* [Repositorio]. GitHub.
+> Equipo CodeMind Lab. (2026). Evidencia del estudio de caso: desarrollo del SCI mediante Spec-Driven Development con apoyo de IA (v1.0) [Conjunto de datos]. Zenodo. https://doi.org/10.5281/zenodo.23720620
 
 ## Autoría
 
