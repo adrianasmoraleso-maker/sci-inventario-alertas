@@ -46,7 +46,7 @@ La aplicación crea `inventory.json` en la carpeta desde donde se ejecuta. Ese a
 cd prototipos\P1-gemini-v1
 mvn test
 
-# P2 (Claude)
+# P2: (Claude)
 cd prototipos\P2-claude
 .\mvnw.cmd test
 ```
